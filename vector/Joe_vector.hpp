@@ -42,7 +42,7 @@ inline void apply_memory(it& start, it& finish, it& end_of_storage ,T x)
 
 		new_start= (it)(::operator new(sizeof(T)*default_kuo));
 		finish = start = new_start;
-		end_of_storage = start + sizeof(T)*default_kuo;
+		end_of_storage = start + default_kuo;
 		contruct(finish, x);
 		++finish;
 	}
@@ -50,11 +50,10 @@ inline void apply_memory(it& start, it& finish, it& end_of_storage ,T x)
 	{
 		new_start= (it)(::operator new(sizeof(T)*default_kuo*cha));
 		memmove(new_start, start, sizeof(T)*cha);
-		debug();
 		delete [] start;
 		start = new_start;
-		finish = start+ sizeof(T)*cha;
-		end_of_storage = start + cha*sizeof(T)*default_kuo;
+		finish = start+ cha;
+		end_of_storage = start + cha*default_kuo;
 		contruct(finish, x);
 		++finish;
 	}
@@ -93,8 +92,8 @@ class Joe_vector
 				const reverse_iterator operator++(int){iterator tmp = ptr;	--ptr;	return tmp; }
 				const reverse_iterator operator--(int){iterator tmp = ptr;	++ptr;	return tmp; }
 
-				reverse_iterator operator+(size_type& diff){	return ptr+diff; }
-				reverse_iterator operator-(size_type& diff){	return ptr-diff; }
+				reverse_iterator operator+(size_type& diff){	return ptr-diff; }
+				reverse_iterator operator-(size_type& diff){	return ptr+diff; }
 
 				reverse_iterator(iterator p = nullptr) : ptr(p) {}
 		};

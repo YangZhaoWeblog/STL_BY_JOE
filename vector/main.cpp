@@ -15,11 +15,17 @@ int main()
 	Joe_vector<int> b;
 	cout << "capacity" << ':' << b.capacity() << endl;
 	b.push_back(1);
+	cout << "capacity" << ':' << b.capacity() << endl;
 	b.push_back(2);
+	cout << "capacity" << ':' << b.capacity() << endl;
 	b.push_back(3);
+	cout << "capacity" << ':' << b.capacity() << endl;
 	b.push_back(4);
 	b.push_back(5);
 	b.push_back(6);
+	b.push_back(7);
+	b.push_back(8);
+	b.push_back(9);
 	cout << "capacity" << ':' << b.capacity() << endl;
 	cout << "size" << ':' << b.size() << endl;
 
