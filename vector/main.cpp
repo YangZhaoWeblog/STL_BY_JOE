@@ -1,3 +1,12 @@
+//resize()
+//reserve()
+
+//copy();
+//iterator turn to public
+//iterative 指向操作
+//+=
+//-=
+//cend() cbenin()
 #include <iostream>
 #include "Joe_vector.hpp"
 using namespace std;
@@ -26,6 +35,8 @@ int main()
 	b.push_back(7);
 	b.push_back(8);
 	b.push_back(9);
+
+
 	cout << "capacity" << ':' << b.capacity() << endl;
 	cout << "size" << ':' << b.size() << endl;
 
@@ -34,6 +45,30 @@ int main()
 		cout << *i << endl;
 	cout << endl;
 
+	cout << "After insert a element which positon is 1" << endl;
+	auto tmp = b.begin();
+	b.insert( tmp, 666);
+
+	for(auto i = b.begin(); i != b.end(); ++i)//正向迭代
+		cout << *i << endl;
+	cout << endl;
+
+	cout << "After erase a element which positon is 3" << endl;
+	auto p = b.begin()+3;
+	b.erase( p);
+
+	for(auto i = b.begin(); i != b.end(); ++i)//正向迭代
+		cout << *i << endl;
+	cout << endl;
+
+	cout << "After erase thre element which range is 3-5" << endl;
+	auto pt = b.begin()+2;
+	b.erase(pt, pt+2);
+
+	for(auto i = b.begin(); i != b.end(); ++i)//正向迭代
+		cout << *i << endl;
+
+	cout << endl;
 	cout << "front" << ":  " << b.front() << endl;
 	cout << "back" << ":  " << b.back() << endl;
 	cout << endl;
@@ -73,10 +108,33 @@ int main()
 	cout << "This is the c object" << endl;
 
 	Joe_vector<int> c(a);
-	cout << "Reverse iterative output" << endl;
+	cout << "along iterative output" << endl;
 	for(auto i = c.begin(); i != c.end(); ++i)
 		cout << *i << endl;
 	cout << endl;
+
+	//cout << "test cbegin and crbegin" << endl;
+	//auto t = b.cbegin();
+	//cout << *t << endl;
+	//*t = 99;
+	//cout << *t << endl;
+
+	cout << "Before shift to fit len:" <<  a.capacity() << endl;
+	a.shift_to_fit();	
+	cout << "After shift to fit  len:" <<  a.capacity() << endl;
+
+	cout << "Before reserve:" <<  a.capacity() << endl;
+	a.reserve(50);
+	cout << "After reserve:" <<  a.capacity() << endl;
+	cout << endl;
+
+	cout << "Before resize:" <<  a.capacity() << endl;
+	c.resize(50);
+	for(auto i = c.begin(); i != c.end(); ++i)
+		cout << *i << ' ';
+	cout << endl;
+	cout << "After resize:" <<  a.capacity() << endl;
+
 }
 
 
