@@ -81,12 +81,12 @@ int main()
 
 	cout << "on size" << endl;
 	for(unsigned i = 0; i != b.size(); ++i)
-		cout << b[i] << endl;
+		cout << b[i] << ' ';
 	cout << endl;
 
 	cout << "Reverse iterative output" << endl;
 	for(auto i = b.rbegin(); i != b.rend(); i++)
-		cout << *i << endl;
+		cout << *i << ' ';
 	cout << endl;
 
 	cout << "clear" << endl;
@@ -94,14 +94,14 @@ int main()
 
 	cout << "Reverse iterative output" << endl;
 	for(auto i = b.rbegin(); i != b.rend(); ++i)
-		cout << *i << endl;
+		cout << *i << ' ';
 	cout << endl;
 
 	cout << "This is the a object" << endl;
 	Joe_vector<int> a(5, 666);
 	cout << "Reverse iterative output" << endl;
 	for(auto i = a.rbegin(); i != a.rend(); ++i)
-		cout << *i << endl;
+		cout << *i << ' ';
 	cout << endl;
 
 
@@ -110,7 +110,7 @@ int main()
 	Joe_vector<int> c(a);
 	cout << "along iterative output" << endl;
 	for(auto i = c.begin(); i != c.end(); ++i)
-		cout << *i << endl;
+		cout << *i << ' ';
 	cout << endl;
 
 	//cout << "test cbegin and crbegin" << endl;

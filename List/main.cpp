@@ -21,19 +21,42 @@ int main()
 	auto i = a.begin();
 	*i = 89;
 
-	cout << "const test" << endl;
-	auto j = a.cbegin();
-	*j = 777;
+//	cout << "const test" << endl;
+//	auto j = a.crbegin();
+//	*j = 777;
 
-	for(auto i = a.begin(); i != a.end(); ++i )
-		cout << *i << ' '; cout << endl;
-
+	cout << "reverse iterator output" << endl;
 	for(auto i = a.rbegin(); i != a.rend(); ++i )
 		cout << *i << ' '; cout << endl;
 
-	for(auto i = a.cbegin(); i != a.cend(); ++i )
+	List<int> b(5, 666);
+
+	for(auto i = b.cbegin(); i != b.cend(); ++i )
 		cout << *i << ' '; cout << endl;
 
-	cout << "size   :" <<  a.size() << endl;
+	cout << "After copy constructer" << endl;
+	List<int> c(a);
+	for(auto i = c.cbegin(); i != c.cend(); ++i )
+		cout << *i << ' '; cout << endl;
+
+	cout << "After clear  " << endl; c.clear();
+
+
+	c.push_front(5);
+	c.push_front(4);
+	c.push_front(3);
+	c.push_front(2);
+
+
+	cout << "After range constructer" << endl;
+
+	cout << "c size   :" <<  c.size() << endl;
 }
+
+
+
+
+
+
+
 
