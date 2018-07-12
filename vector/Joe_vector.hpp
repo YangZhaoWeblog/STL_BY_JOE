@@ -1,6 +1,6 @@
 #ifndef __JOE_VECTOR__
 #define __JOE_VECTOR__
-
+//shrink to fit
 #include <iostream>
 #include <cstdlib>
 #include <cstddef>
@@ -87,23 +87,28 @@ class Joe_vector
 				const reverse_iterator operator++(int){iterator tmp = ptr;	--ptr;	return tmp; }
 				const reverse_iterator operator--(int){iterator tmp = ptr;	++ptr;	return tmp; }
 
-				reverse_iterator operator+(size_type& diff){	return ptr-diff; }
-				reverse_iterator operator+=(size_type& diff){	return ptr+=diff; }
-				reverse_iterator operator-(size_type& diff){	return ptr+diff; }
-				reverse_iterator operator-=(size_type& diff){	return ptr-=diff; }
-
+				reverse_iterator operator+(difference_type& diff){	return ptr-diff; }
+				reverse_iterator operator+=(difference_type& diff){	return ptr+=diff; }
+				reverse_iterator operator-(difference_type& diff){	return ptr+diff; }
+				reverse_iterator operator-=(difference_type& diff){	return ptr-=diff; }
 				reverse_iterator(iterator p = nullptr) : ptr(p) {}
 		};
 
 	public:
 		Joe_vector():start(nullptr),finish(nullptr),end_of_storage(nullptr){ }
-		Joe_vector(size_type n, const_value_type value);//范围定值初始化
+		explicit	Joe_vector(size_type n, const_value_type value)
+		{
+			finish = start= (iterator)(::operator new(sizeof(T)*n));
+			end_of_storage = start + sizeof(T)*n;
+			for(int i = 0; i < n; ++i)
+				push_back(value);
+		}
 		Joe_vector(Joe_vector & x);
 
-		iterator begin()const{return start; };
-		iterator end()const{ return finish; };
+		iterator begin(){return start; };
+		iterator end(){ return finish; };
 		const_iterator cbegin()const{return  start; };
-		const_iterator cend(){ return  finish; };
+		const_iterator cend()const{ return  finish; };
 
 		reverse_iterator rbegin()const{ return (finish-1); };
 		reverse_iterator rend()const{ return (start-1); };
@@ -236,20 +241,10 @@ inline void Joe_vector<T>::resize(size_type n, value_type c  )
 
 }
 
-	template<typename T>
-Joe_vector<T>::Joe_vector(size_type n, const_value_type value )
-{
-	finish = start= (iterator)(::operator new(sizeof(T)*n));
-	end_of_storage = start + sizeof(T)*n;
-	for(int i = 0; i < n; ++i)
-		push_back(value);
-}
 
 	template<typename T>
-Joe_vector<T>::Joe_vector(Joe_vector & x)
+inline Joe_vector<T>::Joe_vector(Joe_vector & x):start(new value_type[x.capacity()])
 {
-	start = new value_type[x.capacity()];
-	//	memmove(start, x.begin(), x.capacity()*sizeof(T));
 	copy(x.begin(), x.end(), start);
 	finish = start + x.size();
 	end_of_storage = start + x.capacity();

@@ -1,5 +1,13 @@
+//#!/usr/bin/env bash
+//# **********************************************************
+//# Author       : Joe_Yang
+//# Last modified: 2018-07-12 14:46
+//# Email        : 1514784049@qq.com || 1514784049yz@gmail.com
+//# Weblog       : https://blog.csdn.net/pursue_my_life/
+//# Filename     : Joe_list.hpp
+//# Description  : It's a List of Joe, arrocding STL to coding 
+//# **********************************************************
 //for const insert
-//iterator ++
 #ifndef __LIST__
 #define __LIST__
 #include <iostream>
@@ -7,10 +15,10 @@
 #define debug(); cout<<__LINE__<<endl;
 using namespace std;
 
-template<typename iterator>
+	template<typename iterator>
 void swap(iterator a_head, iterator b_head)
 {
-	           
+
 }
 
 template<typename node_pointer, typename reference,typename difference_type>
@@ -30,13 +38,14 @@ class iter
 		iter operator++(int){	iter tmp = ptr; ptr = ptr->next; return tmp; }
 		iter operator--(int){   iter tmp = ptr; ptr = ptr->prev; return tmp; }
 
-		iter operator+(difference_type& diff)	{ node_pointer tmp = ptr; while(diff--) tmp = tmp->next; return tmp;	}
-		iter operator-(difference_type& diff)	{ node_pointer tmp = ptr; while(diff--) tmp = tmp->prev; return tmp;	}
+		iter operator+(const difference_type& diff)	{ node_pointer tmp = ptr; difference_type n = diff;while(n--) tmp = tmp->next; return iter(tmp);	}
+		iter operator-(const difference_type& diff)	{ node_pointer tmp = ptr;difference_type n = diff; while(n--) tmp = tmp->prev; return iter(tmp);	}
 		iter operator+=(difference_type& diff){ while(diff--)	ptr = ptr->next;  }
 		iter operator-=(difference_type& diff){ while(diff--)	ptr = ptr->prev;  }
 
 		iter( node_pointer& p=nullptr):ptr(p){	}
 		iter(const node_pointer& p=nullptr):ptr(p){	}
+		iter operator=(iter& x){ this->ptr = x.self();  }
 		node_pointer self(){return ptr;	}
 };
 
@@ -57,13 +66,14 @@ class c_iter
 		c_iter operator++(int){	c_iter tmp = ptr; ptr = ptr->next; return tmp; }
 		c_iter operator--(int){ c_iter tmp = ptr; ptr = ptr->prev; return tmp; }
 
-		c_iter operator+(difference_type& diff)	{ node_pointer tmp = ptr; while(diff--) tmp = tmp->next; return tmp;	}
-		c_iter operator-(difference_type& diff)	{ node_pointer tmp = ptr; while(diff--) tmp = tmp->prev; return tmp;	}
+		c_iter operator+(const difference_type& diff)	{ node_pointer tmp = ptr; difference_type n = diff; while(n--)  tmp = tmp->next; return c_iter(tmp);	}
+		c_iter operator-(const difference_type& diff)	{ node_pointer tmp = ptr; difference_type n = diff; while(n--)  tmp = tmp->prev; return c_iter(tmp);	}
 		c_iter operator+=(difference_type& diff){ while(diff--)	ptr = ptr->next;  }
 		c_iter operator-=(difference_type& diff){ while(diff--)	ptr = ptr->prev;  }
 
 		c_iter( node_pointer& p=nullptr):ptr(p){	}
 		c_iter(const node_pointer& p=nullptr):ptr(p){	}
+		c_iter operator=(c_iter& x){ this->ptr = x.self();  }
 		node_pointer self(){return ptr;	}
 };
 
@@ -84,12 +94,13 @@ class re_iter
 		re_iter operator++(int){   re_iter tmp = ptr; ptr = ptr->prev; return tmp; }
 		re_iter operator--(int){   re_iter tmp = ptr; ptr = ptr->next; return tmp; }
 
-		re_iter operator+(difference_type& diff)	{ node_pointer tmp = ptr; while(diff--) tmp = tmp->prev; return tmp;	}
-		re_iter operator-(difference_type& diff)	{ node_pointer tmp = ptr; while(diff--) tmp = tmp->next; return tmp;	}
+		re_iter operator+(const difference_type& diff)	{ node_pointer tmp = ptr; difference_type n = diff; while(n--) tmp = tmp->prev; return re_iter(tmp);	}
+		re_iter operator-(const difference_type& diff)	{ node_pointer tmp = ptr; difference_type n = diff; while(n--) tmp = tmp->next; return re_iter(tmp);	}
 		re_iter operator+=(difference_type& diff){ while(diff--)	ptr = ptr->prev;  }
 		re_iter operator-=(difference_type& diff){ while(diff--)	ptr = ptr->next;  }
 		re_iter( node_pointer& p=nullptr):ptr(p){	}
 		re_iter(const node_pointer& p=nullptr):ptr(p){	}
+		re_iter operator=(re_iter& x){ this->ptr = x.self();  }
 		node_pointer self(){return ptr;	}
 };
 
@@ -109,14 +120,14 @@ class c_re_iter
 		c_re_iter operator++(int){   c_re_iter tmp = ptr; ptr = ptr->prev; return tmp; }
 		c_re_iter operator--(int){   c_re_iter tmp = ptr; ptr = ptr->next; return tmp; }
 
-		c_re_iter operator+(difference_type& diff)	{ node_pointer tmp = ptr; while(diff--) tmp = tmp->prev; return tmp;	}
-		c_re_iter operator-(difference_type& diff)	{ node_pointer tmp = ptr; while(diff--) tmp = tmp->next; return tmp;	}
+		c_re_iter operator+(const difference_type& diff)	{ node_pointer tmp = ptr;difference_type n = diff; while(n--) tmp = tmp->prev; return c_re_iter(tmp);	}
+		c_re_iter operator-(const difference_type& diff)	{ node_pointer tmp = ptr;difference_type n = diff; while(n--) tmp = tmp->next; return c_re_iter(tmp);	}
 		c_re_iter operator+=(difference_type& diff){ while(diff--)	ptr = ptr->prev;  }
 		c_re_iter operator-=(difference_type& diff){ while(diff--)	ptr = ptr->next;  }
 		c_re_iter( node_pointer& p=nullptr):ptr(p){	}
 		c_re_iter(const node_pointer& p=nullptr):ptr(p){	}
+		c_re_iter operator=(c_re_iter& x){ this->ptr = x.self();  }
 		node_pointer self(){return ptr;	}
-
 };
 
 template<typename T>
@@ -161,27 +172,27 @@ class List
 		List():length(0), Head(new node_type){ }
 
 		explicit List(size_type n, value_type val):List()
-		{
-			while(n--)	push_back(val);	
-		}
+	{
+		while(n--)	push_back(val);	
+	}
 
 		List (const List& x):List()
-		{
-			for(auto i = x.begin(); i != x.end(); ++i)
-				this->push_back(*i);		
-		}
-		
+	{
+		for(auto i = x.begin(); i != x.end(); ++i)
+			this->push_back(*i);		
+	}
+
 		List(iterator first, iterator last):List()
-		{
-			for(auto i = first; i != last; ++i)
-				push_back(*i);
-		}
+	{
+		for(auto i = first; i != last; ++i)
+			push_back(*i);
+	}
 
 		List(std::initializer_list<value_type> il ):List()
-		{
-			for(auto& i: il)
-					push_back(i);
-		}
+	{
+		for(auto& i: il)
+			push_back(i);
+	}
 
 		iterator begin(){return (Head->next);}
 		iterator end(){ return (Head);}
@@ -211,7 +222,7 @@ class List
 				this->push_back(*i);		
 		}
 
-		iterator insert(iterator pos, const_value_type& val);
+		iterator insert (iterator pos, const_value_type& val);
 		iterator insert (iterator pos, size_type n, const_value_type& val);
 		iterator insert (iterator pos, iterator first, iterator last);
 		iterator insert (iterator pos, value_type&& val);
@@ -227,10 +238,10 @@ class List
 		void assign(size_type n, const_value_type& val);
 		void assign(initializer_list<value_type> il);
 
-		void push_front(const_value_type& val)  { insert(begin(), val );	}
-		void push_back (const_value_type& val)	{ insert(end(),   val );	}
-		iterator emplace_front( const_value_type& val){ insert(begin(), val );	}
-		iterator emplace_back( const_value_type& val){ insert(begin(), val );	}
+		void push_front(const_value_type& val)      { insert(begin(), val );	}
+		void push_back (const_value_type& val)		{ insert(end(),   val );	}
+		void emplace_front( const_value_type& val)  { insert(begin(), val );	}
+		void emplace_back( const_value_type& val)   { insert(end(), val );	}
 
 		void pop_back() {  erase(--end());	}
 		void pop_front(){  erase(begin());	}
@@ -241,6 +252,18 @@ class List
 		void sort();
 		void merge();
 		//void sort (Compare comp);
+		void splice (const_iterator pos, List& x);
+	//	void splice (const_iterator pos, List&& x);
+	//	void splice (const_iterator pos, List& x,  const_iterator i);
+	//	void splice (const_iterator pos, List&& x, const_iterator i);
+	//	void splice (const_iterator pos, List& x,  const_iterator first, const_iterator last);
+		void splice (const_iterator pos, List&& x, const_iterator first, const_iterator last);
+
+		void merge (List& x);
+		void merge (List&& x);
+		//void merge (List& x, Compare comp);
+		//void merge (List&& x, Compare comp);
+
 		void unique();
 		~List( ){clear(); delete Head; Head = nullptr;	}
 };
@@ -285,6 +308,26 @@ inline typename List<T>::iterator List<T>::erase(iterator first, iterator last)
 {
 	for(auto i = first; i != last; ++i)
 		erase(i);
+}
+
+	template<typename T>
+inline typename List<T>::iterator List<T>::emplace(const_iterator pos, const_value_type& val)
+{
+
+	if(empty())
+	{
+		node_pointer tmp = new node_type(Head, Head , val);
+		Head->next = tmp;
+		Head->prev = tmp;
+		++length;
+		return tmp; 
+	}
+
+	node_pointer tmp = new node_type(pos.self(), pos.self()->next , val);
+	pos.self()->prev->next = tmp;
+	pos.self()->prev       = tmp;
+	++length;
+	return tmp;
 }
 
 	template<typename T>
@@ -353,29 +396,88 @@ inline void List<T>::re_move(const_value_type& val)
 	template<typename T>
 inline 	void List<T>::resize (size_type n, const_value_type& val )
 {
-		if( n > max_size() )	
-			cerr << "out of mempry" << endl;
-		else if(n > size())
-		{
-			int tmp = n-size();
-			while(tmp--)
-				push_back(val);
-		}
-		else if(n > 0)
-		{
-			for(int i = 0; i < n-size(); ++i)
-				pop_back();	
-		}
+	if( n > max_size() )	
+		cerr << "out of mempry" << endl;
+	else if(n > size())
+	{
+		int tmp = n-size();
+		while(tmp--)
+			push_back(val);
+	}
+	else if(n > 0)
+	{
+		for(int i = 0; i < n-size(); ++i)
+			pop_back();	
+	}
 }
 
 	template<typename T>
-inline void List<T>::reverse() noexcept//I can't understand why It is O(n) of STL, why they don't move iterator??
+inline void List<T>::unique()
 {
-	//node_pointer tmp = Head->next;	           
-	//Head->next = Head->prev;
-	//Head->prev = tmp;
-	std::swap(Head->next, Head->prev);
+	for(auto i = begin(); i != end(); ++i)
+		if(*i == *(i-1))
+			erase(i);
 }
+
+template<typename T>
+inline void List<T>::reverse() noexcept//It's not swap iterator of Head, all the node in the List should swap.
+{
+	for(auto i = Head->next; i != Head; )
+	{
+		node_pointer tmp  = i->next;
+		i->next = i->prev;
+		i->prev = tmp;
+		i = tmp;
+	}
+
+	node_pointer tmp = Head->next;
+	Head->next = Head->prev;
+	Head->prev = tmp;
+}
+
+
+	template<typename T>
+inline void List<T>::splice (const_iterator pos, List& x)
+{
+	//first do left
+	pos.self()->prev->next = x.begin().self();  
+	x.begin().self()->prev = pos.self()->prev;
+
+	x.end().self()->prev->next = pos.self();
+	pos.self()->prev = x.end().self()->prev;
+	delete x.end().self();
+}
+
+//	template<typename T>
+//inline void List<T>::splice (const_iterator pos, List&& x)
+//{
+//
+//}
+//
+//	template<typename T>
+//inline void List<T>::splice (const_iterator pos, List& x, const_iterator i)
+//{
+//
+//}
+//
+//	template<typename T>
+//inline void List<T>::splice (const_iterator pos, List&& x, const_iterator i)
+//{
+//
+//}
+//
+//	template<typename T>
+//inline void List<T>::splice (const_iterator pos, List& x, const_iterator first, const_iterator last)
+//{
+//
+//}
+//
+//	template<typename T>
+//inline void List<T>::splice (const_iterator pos, List&& x,const_iterator first, const_iterator last)
+//{
+//
+//}
+
 
 	template<typename T>
 inline void List<T>::clear()
@@ -383,7 +485,6 @@ inline void List<T>::clear()
 	//using iterator are more simple;
 	if(empty())
 		return; 
-
 	for(auto i = begin(); i != end(); ++i)
 		delete i.self();
 	length = 0;

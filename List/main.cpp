@@ -104,7 +104,40 @@ cout << "*************Object d**********************" << endl;
 
 	for(auto i = d.begin(); i != d.end(); ++i)
 		cout << *i << ' ';cout << endl;
+
+		d.unique();
+
+	for(auto i = d.begin()+1; i != d.end(); ++i)
+		cout << *i << ' ';cout << endl;
+
+		d.emplace_back(666);
+		d.emplace_back(777);
+		d.emplace_front(111);
+		d.emplace_front(222);
+
+	for(auto i = d.begin(); i != d.end(); ++i)
+		cout << *i << ' ';cout << endl;
+cout << "*************Object m, v**********************" << endl;
+	List<double> m = {1,    9	};
+	List<double> v = {2, 3, 4, 5, 6,7,8};
+
+	m.splice( m.cbegin()+1, v  );
+	
+	for(auto i = m.begin(); i != m.end(); ++i)
+	{
+		cout << *i << ' ';
+	}
+		cout << endl;
 }
+
+
+
+
+
+
+
+
+
 
 
 
