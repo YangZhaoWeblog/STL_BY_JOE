@@ -1,3 +1,5 @@
+//for const insert
+//iterator ++
 #ifndef __LIST__
 #define __LIST__
 #include <iostream>
@@ -175,7 +177,11 @@ class List
 				push_back(*i);
 		}
 
-	//	void (std::initializer_list<value_type> il)
+		List(std::initializer_list<value_type> il ):List()
+		{
+			for(auto& i: il)
+					push_back(i);
+		}
 
 		iterator begin(){return (Head->next);}
 		iterator end(){ return (Head);}
@@ -199,19 +205,20 @@ class List
 		size_type max_size(){return UINT_MAX/sizeof(node_type);}
 		void clear();
 
-		List& operator= (const List& x)
+		List& operator=(const List& x)
 		{ 
 			for(auto i = x.begin(); i != x.end(); ++i)
 				this->push_back(*i);		
 		}
 
 		iterator insert(iterator pos, const_value_type& val);
-		iterator insert (iterator position, size_type n, const_value_type& val);
-		iterator insert (const_iterator position, iterator first, iterator last);
-		iterator insert (const_iterator position, value_type&& val);
-		iterator insert (const_iterator position, initializer_list<value_type> il);
+		iterator insert (iterator pos, size_type n, const_value_type& val);
+		iterator insert (iterator pos, iterator first, iterator last);
+		iterator insert (iterator pos, value_type&& val);
+		iterator insert (iterator pos, initializer_list<value_type> il);
 
 		void re_move(const_value_type& val);
+		//      void re_move_if(Predicate pred );
 		iterator erase(iterator pos);
 		iterator erase(iterator first, iterator last);
 		iterator emplace(const_iterator pos, const_value_type& val);
@@ -222,13 +229,13 @@ class List
 
 		void push_front(const_value_type& val)  { insert(begin(), val );	}
 		void push_back (const_value_type& val)	{ insert(end(),   val );	}
-		iterator emplace_front( const_value_type& val);
-		iterator emplace_back( const_value_type& val);
+		iterator emplace_front( const_value_type& val){ insert(begin(), val );	}
+		iterator emplace_back( const_value_type& val){ insert(begin(), val );	}
+
 		void pop_back() {  erase(--end());	}
 		void pop_front(){  erase(begin());	}
 
-		void resize (size_type n);
-		void resize (size_type n, const value_type& val);
+		void resize (size_type n, const_value_type& val = value_type());
 		void reverse() noexcept;
 
 		void sort();
@@ -253,6 +260,13 @@ inline void List<T>::assign(iterator first, iterator last)
 		push_back(*i);
 }
 
+	template<typename T>
+inline 	void List<T>::assign(initializer_list<value_type> il)
+{
+	clear();
+	for(auto i = il.end(); i != il.begin(); --i)
+		push_back(*i);
+}
 	template<typename T>
 inline typename List<T>::iterator List<T>::erase(iterator pos)
 {
@@ -303,6 +317,64 @@ inline typename List<T>::iterator List<T>::insert (iterator pos, size_type n, co
 	while(n--)
 		insert(pos, val);           
 	return pos;
+}
+
+	template<typename T>
+inline typename List<T>::iterator List<T>::insert (iterator pos, value_type&& val)
+{
+	insert(pos, val);           
+	return pos;
+}
+
+	template<typename T>
+inline typename List<T>::iterator List<T>::insert (iterator pos, iterator first, iterator last)
+{
+	for(auto i = last; i != first; --i)
+		insert(pos, *i);
+	return pos;
+}
+
+
+	template<typename T>
+inline typename	List<T>::iterator List<T>::insert (iterator pos, initializer_list<value_type> il)
+{
+	for(auto i = il.end(); i != il.begin(); --i)
+		insert(pos, *i );
+}
+
+	template<typename T>
+inline void List<T>::re_move(const_value_type& val)
+{
+	for(auto i = begin(); i != end(); ++i)
+		if(*i == val)
+			erase(i);
+}
+
+	template<typename T>
+inline 	void List<T>::resize (size_type n, const_value_type& val )
+{
+		if( n > max_size() )	
+			cerr << "out of mempry" << endl;
+		else if(n > size())
+		{
+			int tmp = n-size();
+			while(tmp--)
+				push_back(val);
+		}
+		else if(n > 0)
+		{
+			for(int i = 0; i < n-size(); ++i)
+				pop_back();	
+		}
+}
+
+	template<typename T>
+inline void List<T>::reverse() noexcept//I can't understand why It is O(n) of STL, why they don't move iterator??
+{
+	//node_pointer tmp = Head->next;	           
+	//Head->next = Head->prev;
+	//Head->prev = tmp;
+	std::swap(Head->next, Head->prev);
 }
 
 	template<typename T>

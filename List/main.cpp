@@ -2,6 +2,7 @@
 
 int main()
 {
+	cout << "*************Object a**********************" << endl;
 	List<int> a;
 	cout <<"empty?? :" <<  a.empty() << endl;
 	cout << "size   :" <<  a.size() << endl;
@@ -17,6 +18,7 @@ int main()
 	for(auto i = a.begin(); i != a.end(); ++i )
 		cout << *i << ' '; cout << endl;
 
+	cout << "a.begin() = 89" << endl;
 	cout << "const test" << endl;
 	auto i = a.begin();
 	*i = 89;
@@ -29,18 +31,23 @@ int main()
 	for(auto i = a.rbegin(); i != a.rend(); ++i )
 		cout << *i << ' '; cout << endl;
 
+
+	cout << "*************Object b**********************" << endl;
 	List<int> b(5, 666);
 
 	for(auto i = b.cbegin(); i != b.cend(); ++i )
 		cout << *i << ' '; cout << endl;
 
-	cout << "After copy constructer" << endl;
+
+	cout << "*************Object c**********************" << endl;
+	cout << "object C After copy constructer from b" << endl;
 	List<int> c(a);
 	for(auto i = c.cbegin(); i != c.cend(); ++i )
 		cout << *i << ' '; cout << endl;
 
 	cout << "After clear  " << endl; c.clear();
-	
+
+	cout << "push_back" << endl;
 	c.push_front(5);
 	c.push_front(4);
 	c.push_front(3);
@@ -58,15 +65,45 @@ int main()
 	for(auto i = c.cbegin(); i != c.cend(); ++i )
 		cout << *i << ' '; cout << endl;
 
+	cout << "c.assign(2, 777)" << endl;
 	c.assign(2, 777);
 	for(auto i = c.cbegin(); i != c.cend(); ++i )
 		cout << *i << ' '; cout << endl;
-	
+
+	cout << "c.insert(++c.begin(), 5, 999)" << endl;
 	c.insert(++c.begin(), 5, 999);
 
 	for(auto i = c.cbegin(); i != c.cend(); ++i )
 		cout << *i << ' '; cout << endl;
 
+cout << "c.insert(++c.begin(),++a.begin() , --a.end())" << endl;
+	c.insert(++c.begin(), ++a.begin(), --a.end() );
+
+	for(auto i = c.cbegin(); i != c.cend(); ++i )
+		cout << *i << ' '; cout << endl;
+
+	cout << "c.re_move(999)" << endl;
+	c.re_move(999);
+
+	for(auto i = c.cbegin(); i != c.cend(); ++i )
+		cout << *i << ' '; cout << endl;
+
+cout << "*************Object d**********************" << endl;
+
+	List<int> d = {1, 1, 2, 3, 5, 8, 13, 21};	
+
+	for(auto i = d.begin(); i != d.end(); ++i)
+		cout << *i << ' ';cout << endl;
+
+	d.resize(11, 789);
+
+	for(auto i = d.begin(); i != d.end(); ++i)
+		cout << *i << ' ';cout << endl;
+
+	d.reverse();
+
+	for(auto i = d.begin(); i != d.end(); ++i)
+		cout << *i << ' ';cout << endl;
 }
 
 
