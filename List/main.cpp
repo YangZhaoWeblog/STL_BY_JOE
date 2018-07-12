@@ -40,17 +40,33 @@ int main()
 		cout << *i << ' '; cout << endl;
 
 	cout << "After clear  " << endl; c.clear();
-
-
+	
 	c.push_front(5);
 	c.push_front(4);
 	c.push_front(3);
 	c.push_front(2);
+	c.push_front(1);
 
+	for(auto i = c.cbegin(); i != c.cend(); ++i )
+		cout << *i << ' '; cout << endl; 
 
-	cout << "After range constructer" << endl;
+	c.pop_front();
+	c.pop_front();
+	c.pop_back();
+	c.pop_back();
 
-	cout << "c size   :" <<  c.size() << endl;
+	for(auto i = c.cbegin(); i != c.cend(); ++i )
+		cout << *i << ' '; cout << endl;
+
+	c.assign(2, 777);
+	for(auto i = c.cbegin(); i != c.cend(); ++i )
+		cout << *i << ' '; cout << endl;
+	
+	c.insert(++c.begin(), 5, 999);
+
+	for(auto i = c.cbegin(); i != c.cend(); ++i )
+		cout << *i << ' '; cout << endl;
+
 }
 
 

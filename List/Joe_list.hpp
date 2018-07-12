@@ -1,8 +1,15 @@
 #ifndef __LIST__
 #define __LIST__
 #include <iostream>
+#include <climits>
 #define debug(); cout<<__LINE__<<endl;
 using namespace std;
+
+template<typename iterator>
+void swap(iterator a_head, iterator b_head)
+{
+	           
+}
 
 template<typename node_pointer, typename reference,typename difference_type>
 class iter
@@ -127,22 +134,22 @@ class List
 		using Node = list_Node<T>;
 
 	public:
-		using value_type = T; 
+		using value_type       = T; 
 		using const_value_type = const T; 
-		using pointer =  value_type*; 
-		using reference = value_type&;
-		using const_reference = const value_type&;
+		using pointer          =  value_type*; 
+		using reference        = value_type&;
+		using const_reference  = const value_type&;
 
-		using node_type  = Node;
+		using node_type       = Node;
 		using node_pointer    = node_type* ;
 		using node_reference  = node_type&;
 		using difference_type = ptrdiff_t;
-		using size_type  = size_t;
+		using size_type       = size_t;
 
-		using iterator      = iter<node_pointer, reference, difference_type>;
-		using re_iterator   = re_iter<node_pointer, reference, difference_type>;
-		using const_iterator   = c_iter<node_pointer, const_reference,difference_type>;
-		using const_re_iterator   = c_re_iter<node_pointer, const_reference, difference_type>;
+		using iterator            =  iter<node_pointer, reference, difference_type>;
+		using re_iterator         =  re_iter<node_pointer, reference, difference_type>;
+		using const_iterator      =  c_iter<node_pointer, const_reference,difference_type>;
+		using const_re_iterator   =  c_re_iter<node_pointer, const_reference, difference_type>;
 
 	private:
 		size_type length;
@@ -161,8 +168,15 @@ class List
 			for(auto i = x.begin(); i != x.end(); ++i)
 				this->push_back(*i);		
 		}
+		
+		List(iterator first, iterator last):List()
+		{
+			for(auto i = first; i != last; ++i)
+				push_back(*i);
+		}
 
-		reference operator[](difference_type& diff){ iterator tmp; tmp+=diff; return *tmp;	}
+	//	void (std::initializer_list<value_type> il)
+
 		iterator begin(){return (Head->next);}
 		iterator end(){ return (Head);}
 		const_iterator begin()const{return (Head->next);}
@@ -182,17 +196,82 @@ class List
 		value_type back(){return *(--end());	}
 		size_type size(){return length;}
 		bool empty(){return size()== 0; }
+		size_type max_size(){return UINT_MAX/sizeof(node_type);}
 		void clear();
 
-		iterator operator=(iterator& sth ){ return sth.self();  }
+		List& operator= (const List& x)
+		{ 
+			for(auto i = x.begin(); i != x.end(); ++i)
+				this->push_back(*i);		
+		}
+
 		iterator insert(iterator pos, const_value_type& val);
+		iterator insert (iterator position, size_type n, const_value_type& val);
+		iterator insert (const_iterator position, iterator first, iterator last);
+		iterator insert (const_iterator position, value_type&& val);
+		iterator insert (const_iterator position, initializer_list<value_type> il);
+
+		void re_move(const_value_type& val);
+		iterator erase(iterator pos);
+		iterator erase(iterator first, iterator last);
+		iterator emplace(const_iterator pos, const_value_type& val);
+
+		void assign(iterator first, iterator last);
+		void assign(size_type n, const_value_type& val);
+		void assign(initializer_list<value_type> il);
 
 		void push_front(const_value_type& val)  { insert(begin(), val );	}
 		void push_back (const_value_type& val)	{ insert(end(),   val );	}
+		iterator emplace_front( const_value_type& val);
+		iterator emplace_back( const_value_type& val);
+		void pop_back() {  erase(--end());	}
+		void pop_front(){  erase(begin());	}
 
-		void pop_back();
+		void resize (size_type n);
+		void resize (size_type n, const value_type& val);
+		void reverse() noexcept;
+
+		void sort();
+		void merge();
+		//void sort (Compare comp);
+		void unique();
 		~List( ){clear(); delete Head; Head = nullptr;	}
 };
+
+	template<typename T>
+inline void List<T>::assign(size_type n, const_value_type& val)
+{
+	clear(); 
+	while(n--)
+		push_back(val);
+}
+	template<typename T>
+inline void List<T>::assign(iterator first, iterator last)
+{
+	clear();
+	for(auto i = first; i != last; ++i)
+		push_back(*i);
+}
+
+	template<typename T>
+inline typename List<T>::iterator List<T>::erase(iterator pos)
+{
+	if(empty())
+		cerr <<  "List is empty" << endl;
+
+	pos.self()->prev->next = pos.self()->next;
+	pos.self()->next->prev = pos.self()->prev;
+	delete pos.self();
+	--length;
+	return pos;
+}
+
+	template<typename T>
+inline typename List<T>::iterator List<T>::erase(iterator first, iterator last)
+{
+	for(auto i = first; i != last; ++i)
+		erase(i);
+}
 
 	template<typename T>
 inline typename List<T>::iterator List<T>::insert(iterator pos, const_value_type& val)
@@ -219,6 +298,14 @@ inline typename List<T>::iterator List<T>::insert(iterator pos, const_value_type
 }
 
 	template<typename T>
+inline typename List<T>::iterator List<T>::insert (iterator pos, size_type n, const_value_type& val)
+{
+	while(n--)
+		insert(pos, val);           
+	return pos;
+}
+
+	template<typename T>
 inline void List<T>::clear()
 {
 	//using iterator are more simple;
@@ -233,35 +320,6 @@ inline void List<T>::clear()
 }
 
 
-//	template<typename T>
-//void List<T>::erase(size_t pos)
-//{
-//
-//	Node* p = Head->next;
-//	while(pos--)
-//	{
-//		p = p->next;
-//	}
-//
-//	Head->date--;
-//	p->prev->next = p->next;
-//	p->next->prev = p->prev;
-//	delete p;
-//	p = nullptr;
-//}
-
-//
-//	template<typename T>
-//void List<T>::get_value(size_t pos)
-//{
-//	Node* p = Head->next;
-//	while(pos--)
-//	{
-//		p = p->next;
-//	}
-//	cout << p->date << endl;
-//}
-//
 
 #endif
 
