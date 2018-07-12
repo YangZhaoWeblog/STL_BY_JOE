@@ -118,16 +118,40 @@ cout << "*************Object d**********************" << endl;
 	for(auto i = d.begin(); i != d.end(); ++i)
 		cout << *i << ' ';cout << endl;
 cout << "*************Object m, v**********************" << endl;
-	List<double> m = {1,    9	};
-	List<double> v = {2, 3, 4, 5, 6,7,8};
+
+	List<int> m = {1,    9	};
+	List<int> v = {2, 3, 4, 5, 6,7,8};
 
 	m.splice( m.cbegin()+1, v  );
 	
 	for(auto i = m.begin(); i != m.end(); ++i)
-	{
-		cout << *i << ' ';
-	}
-		cout << endl;
+		cout << *i << ' ';cout << endl;
+
+	m.emplace(m.begin(), 999);
+
+	for(auto i = m.begin(); i != m.end(); ++i)
+		cout << *i << ' ';cout << endl;
+
+
+	cout << "Object d" << endl;
+	for(auto i = d.begin(); i != d.end(); ++i)
+		cout << *i << ' ';cout << endl;
+	cout << "Object m" << endl;
+	for(auto i = m.begin(); i != m.end(); ++i)
+		cout << *i << ' ';cout << endl;
+
+	cout << "m.swap(d)" << endl;
+	m.swap(d);
+
+	cout << "Object d" << endl;
+	for(auto i = d.begin(); i != d.end(); ++i)
+		cout << *i << ' ';cout << endl;
+	cout << "Object m" << endl;
+	for(auto i = m.begin(); i != m.end(); ++i)
+		cout << *i << ' ';cout << endl;
+
+	exit(1);
+	return 0;
 }
 
 
