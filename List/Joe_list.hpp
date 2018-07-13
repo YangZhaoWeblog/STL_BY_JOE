@@ -12,6 +12,7 @@
 #define __LIST__
 #include <iostream>
 #include <climits>
+#include "iteratorr.hpp"
 #define debug(); cout<<__LINE__<<endl;
 using namespace std;
 
@@ -40,7 +41,7 @@ class iter
 
 		iter( node_pointer& p=nullptr):ptr(p){	}
 		iter(const node_pointer& p=nullptr):ptr(p){	}
-		iter operator=(iter& x){ this->ptr = x.self();  }
+		void operator=(iter& x){ this->ptr = x.self(); }
 		node_pointer self(){return ptr;	}
 };
 
@@ -162,7 +163,7 @@ class List
 	private:
 		size_type length;
 		node_pointer   Head;
-
+		void transfer(iterator pos, iterator first, iterator last);//this function is for merge,sort, and reverse
 	public:
 		List():length(0), Head(new node_type){ }
 
@@ -246,17 +247,15 @@ class List
 
 		void sort();
 		//void sort (Compare comp);
-		void splice (const_iterator pos, List& x);
-		void splice (const_iterator pos, List&& x);
-		void splice (const_iterator pos, List& x,  const_iterator i);
-		void splice (const_iterator pos, List&& x, const_iterator i);
-		void splice (const_iterator pos, List& x,  const_iterator first, const_iterator last);
-		void splice (const_iterator pos, List&& x, const_iterator first, const_iterator last);
+		void splice (iterator pos, List& x);
+		void splice (iterator pos, List&& x);
+		void splice (iterator pos, List& x,  iterator i);
+		void splice (iterator pos, List&& x, iterator i);
+		void splice (iterator pos, List& x,  iterator first, iterator last);
+		void splice (iterator pos, List&& x, iterator first, iterator last);
 
 		void merge (List& x);
 		void merge (List&& x);
-		//void merge (List& x, Compare comp);
-		//void merge (List&& x, Compare comp);
 
 		void unique();
 		void swap(List& x)
@@ -422,6 +421,43 @@ inline void List<T>::unique()
 }
 
 template<typename T>
+inline void List<T>::transfer(iterator pos, iterator first, iterator last)//this function is for merge,sort, and reverse
+{
+	    last.self()->prev->next  = pos.self();
+		first.self()->prev->next = last.self();	           
+		pos.self()->prev->next   = first.self();
+
+		node_pointer tmp         = pos.self()->prev;
+		pos.self()->prev         = last.self()->prev;
+		last.self()->prev        = first.self()->prev;
+		first.self()->prev       =  tmp;
+}
+
+
+	template<typename T>
+inline	void List<T>::merge (List& x)
+{
+	auto i = this->begin();
+	auto len_i = this->end();
+	auto j = x.begin();
+	auto len_j = x.end();
+
+	while(i != len_i && j != len_j)
+	{
+		if(*j < *i)
+		{
+			auto next = j;    
+			transfer(i, j, ++next);
+			j = next;
+		}
+		else
+			++i;
+		if( i != j)
+			transfer(len_i, j, len_j);
+	}
+}
+
+template<typename T>
 inline void List<T>::reverse() noexcept//It's not swap iterator of Head, all the node in the List should swap.
 {
 	for(auto i = Head->next; i != Head; )
@@ -439,65 +475,33 @@ inline void List<T>::reverse() noexcept//It's not swap iterator of Head, all the
 
 
 	template<typename T>
-inline void List<T>::splice (const_iterator pos, List& x)
+inline void List<T>::splice (iterator pos, List& x)
 {
-	//first do left
-	pos.self()->prev->next = x.begin().self();  
-	x.begin().self()->prev = pos.self()->prev;
-
-	x.end().self()->prev->next = pos.self();
-	pos.self()->prev = x.end().self()->prev;
-
-	x.end().self()->next = x.end().self()->next;
-	x.end().self()->prev = x.end().self()->prev;
+	if(!x.empty())
+		transfer(pos, x.begin(), x.end());
 }
 
 	template<typename T>
-inline void List<T>::splice (const_iterator pos, List&& x)
+inline void List<T>::splice (iterator pos, List&& x)
 {
-	pos.self()->prev->next = x.begin().self();  
-	x.begin().self()->prev = pos.self()->prev;
-
-	x.end().self()->prev->next = pos.self();
-	pos.self()->prev = x.end().self()->prev;
-
-	x.end().self()->next = x.end().self()->next;
-	x.end().self()->prev = x.end().self()->prev;
+	if(!x.empty())
+		transfer(pos, x.begin(), x.end());
 }
 
 	template<typename T>//f
-inline void List<T>::splice (const_iterator pos, List& x, const_iterator i)
+inline void List<T>::splice (iterator pos, List& x, iterator i)
 {
-	if(x.empty())
-		return;
+	if(!x.empty())
+		transfer(pos, i, i+1);
 
-	i.self()->prev->next = i.self()->next;
-	i.self()->next->prev = i.self()->prev;
-
-	i.self()->prev = pos.self()->prev;
-	i.self()->next = pos.self(); 
-
-	pos.self()->prev->next = i.self();
-	pos.self()->next     = pos.self();
 }
+
 
 	template<typename T>
-inline void List<T>::splice (const_iterator pos, List&& x, const_iterator i)
+inline void List<T>::splice (iterator pos, List& x, iterator first, iterator last)
 {
-
+	transfer(pos, first, last);
 }
-
-	template<typename T>
-inline void List<T>::splice (const_iterator pos, List& x, const_iterator first, const_iterator last)
-{
-
-}
-
-//	template<typename T>
-//inline void List<T>::splice (const_iterator pos, List&& x,const_iterator first, const_iterator last)
-//{
-//
-//}
 
 
 	template<typename T>
@@ -515,6 +519,25 @@ inline void List<T>::clear()
 
 
 
+	template<typename T>
+inline	void List<T>::sort( )
+{
+	if(size() == 0 || size() == 1)
+		return;
+	std::list<T> tmp;
+	for(auto i = begin(); i != end(); ++i)
+		tmp.push_back(*i);
+	tmp.sort();
+	clear();
+	for(auto i = tmp.begin(); i != tmp.end(); ++i)
+		push_back(*i);
+}
+
 #endif
+
+
+
+
+
 
 

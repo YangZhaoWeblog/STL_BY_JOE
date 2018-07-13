@@ -122,7 +122,7 @@ cout << "*************Object m, v**********************" << endl;
 	List<int> m = {1,    9	};
 	List<int> v = {2, 3, 4, 5, 6,7,8};
 
-	m.splice( m.cbegin()+1, v  );
+	m.splice( m.begin()+1, v  );
 	
 	for(auto i = m.begin(); i != m.end(); ++i)
 		cout << *i << ' ';cout << endl;
@@ -150,7 +150,20 @@ cout << "*************Object m, v**********************" << endl;
 	for(auto i = m.begin(); i != m.end(); ++i)
 		cout << *i << ' ';cout << endl;
 
-	exit(1);
+
+cout << "*************Object w, e********************" << endl;
+	List<int> w = {1,3,5,7,9	};
+	List<int> e = {2,4,6,8,10	};
+	w.merge(e);
+	for(auto i = w.begin(); i != w.end(); ++i)
+		cout << *i << ' ';cout << endl;
+
+
+cout << "*************Object so**********************" << endl;
+	List<int> so = {-88, 56, 78, 92, 0, 3, 2, 7	};
+	so.sort();
+	for(auto i = so.begin(); i != so.end(); ++i)
+		cout << *i << ' ';cout << endl;
 	return 0;
 }
 
