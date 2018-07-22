@@ -8,7 +8,6 @@ class rb_tree_iterator
 		pointer ptr;
 	public:
 	   pointer operator*( const pointer);
-		
 };
 
 

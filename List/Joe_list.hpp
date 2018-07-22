@@ -8,13 +8,16 @@
 //# Description  : It's a List of Joe, arrocding STL to coding 
 //# **********************************************************
 //for const insert
-#ifndef __LIST__
-#define __LIST__
+
+#ifndef _JOE_LIST_HPP__
+#define _JOE_LIST_HPP__
 #include <iostream>
 #include <climits>
-#include "iteratorr.hpp"
+using namespace std;
 #define debug(); cout<<__LINE__<<endl;
 using namespace std;
+
+
 
 
 template<typename node_pointer, typename reference,typename difference_type>
@@ -29,10 +32,10 @@ class iter
 		reference  operator*()const { return ptr->date;     }//must return reference
 		node_pointer  operator->()const{ return &(operator*());	}
 
-		iter operator++(){	ptr = ptr->next; return ptr; };
-		iter operator--(){	ptr = ptr->prev; return ptr; };
-		iter operator++(int){	iter tmp = ptr; ptr = ptr->next; return tmp; }
-		iter operator--(int){   iter tmp = ptr; ptr = ptr->prev; return tmp; }
+		iter operator++(){	ptr = ptr->next; return iter(ptr); };
+		iter operator--(){	ptr = ptr->prev; return iter(ptr); };
+		iter operator++(int){	iter tmp = ptr; ptr = ptr->next; return iter(ptr); }
+		iter operator--(int){   iter tmp = ptr; ptr = ptr->prev; return iter(ptr); }
 
 		iter operator+(const difference_type& diff)	{ node_pointer tmp = ptr; difference_type n = diff;while(n--) tmp = tmp->next; return iter(tmp);	}
 		iter operator-(const difference_type& diff)	{ node_pointer tmp = ptr;difference_type n = diff; while(n--) tmp = tmp->prev; return iter(tmp);	}
@@ -57,10 +60,10 @@ class c_iter
 		const_reference operator*()const { return ptr->date;     }//must return reference
 		node_pointer  operator->()const{ return &(operator*());	}
 
-		c_iter operator++(){	ptr = ptr->next; return ptr; };
-		c_iter operator--(){	ptr = ptr->prev; return ptr; };
-		c_iter operator++(int){	c_iter tmp = ptr; ptr = ptr->next; return tmp; }
-		c_iter operator--(int){ c_iter tmp = ptr; ptr = ptr->prev; return tmp; }
+		c_iter operator++(){	ptr = ptr->next; return c_iter(ptr); };
+		c_iter operator--(){	ptr = ptr->prev; return c_iter(ptr); };
+		c_iter operator++(int){	c_iter tmp = ptr; ptr = ptr->next; return c_iter(tmp); }
+		c_iter operator--(int){ c_iter tmp = ptr; ptr = ptr->prev; return c_iter(tmp); }
 
 		c_iter operator+(const difference_type& diff)	{ node_pointer tmp = ptr; difference_type n = diff; while(n--)  tmp = tmp->next; return c_iter(tmp);	}
 		c_iter operator-(const difference_type& diff)	{ node_pointer tmp = ptr; difference_type n = diff; while(n--)  tmp = tmp->prev; return c_iter(tmp);	}
@@ -85,10 +88,10 @@ class re_iter
 
 		reference operator*()const { return ptr->date;     }//must return reference
 		node_pointer  operator->()const{ return &(operator*());	}
-		re_iter operator++(){	ptr = ptr->prev; return ptr; };
-		re_iter operator--(){	ptr = ptr->next; return ptr; };
-		re_iter operator++(int){   re_iter tmp = ptr; ptr = ptr->prev; return tmp; }
-		re_iter operator--(int){   re_iter tmp = ptr; ptr = ptr->next; return tmp; }
+		re_iter operator++(){	ptr = ptr->prev; return re_iter(ptr); };
+		re_iter operator--(){	ptr = ptr->next; return re_iter(ptr); };
+		re_iter operator++(int){   re_iter tmp = ptr; ptr = ptr->prev; return re_iter(tmp); }
+		re_iter operator--(int){   re_iter tmp = ptr; ptr = ptr->next; return re_iter(tmp); }
 
 		re_iter operator+(const difference_type& diff)	{ node_pointer tmp = ptr; difference_type n = diff; while(n--) tmp = tmp->prev; return re_iter(tmp);	}
 		re_iter operator-(const difference_type& diff)	{ node_pointer tmp = ptr; difference_type n = diff; while(n--) tmp = tmp->next; return re_iter(tmp);	}
@@ -111,10 +114,10 @@ class c_re_iter
 
 		const_reference operator*()const { return ptr->date;     }//must return reference
 		node_pointer  operator->()const{ return &(operator*());	}
-		c_re_iter operator++(){	ptr = ptr->prev; return ptr; };
-		c_re_iter operator--(){	ptr = ptr->next; return ptr; };
-		c_re_iter operator++(int){   c_re_iter tmp = ptr; ptr = ptr->prev; return tmp; }
-		c_re_iter operator--(int){   c_re_iter tmp = ptr; ptr = ptr->next; return tmp; }
+		c_re_iter operator++(){	ptr = ptr->prev; return c_re_iter(ptr); };
+		c_re_iter operator--(){	ptr = ptr->next; return c_re_iter(ptr); };
+		c_re_iter operator++(int){   c_re_iter tmp = ptr; ptr = ptr->prev; return c_re_iter(tmp); }
+		c_re_iter operator--(int){   c_re_iter tmp = ptr; ptr = ptr->next; return c_re_iter(tmp); }
 
 		c_re_iter operator+(const difference_type& diff)	{ node_pointer tmp = ptr;difference_type n = diff; while(n--) tmp = tmp->prev; return c_re_iter(tmp);	}
 		c_re_iter operator-(const difference_type& diff)	{ node_pointer tmp = ptr;difference_type n = diff; while(n--) tmp = tmp->next; return c_re_iter(tmp);	}
@@ -132,7 +135,7 @@ struct list_Node
 	list_Node* prev;
 	list_Node* next;
 	T date;
-	list_Node(T val=666):prev(prev), next(next), date(val){	}
+	list_Node(T val=666):prev(nullptr), next(nullptr), date(val){	}
 };
 
 
@@ -190,20 +193,20 @@ class List
 			push_back(i);
 	}
 
-		iterator begin(){return (Head->next);}
-		iterator end(){ return (Head);}
-		const_iterator begin()const{return (Head->next);}
-		const_iterator	end()const{ return (Head);}
-		const_iterator cbegin(){return (Head->next);}
-		const_iterator cend(){ return (Head);}
+		iterator begin(){return iterator(Head->next);}
+		iterator end(){ return  iterator(Head);}
+		const_iterator begin()const{return const_iterator(Head->next);}
+		const_iterator	end()const{ return const_iterator(Head);}
+		const_iterator cbegin(){return const_iterator(Head->next);}
+		const_iterator cend(){ return const_iterator(Head);}
 
-		re_iterator rbegin(){return Head->prev;}
-		re_iterator rend(){ return (Head);}
-		const_re_iterator rbegin()const{return Head->prev;}
-		const_re_iterator rend()const{ return (Head);}
+		re_iterator rbegin(){return re_iterator(Head->prev);}
+		re_iterator rend()  { return re_iterator(Head);}
+		const_re_iterator rbegin()const{return const_re_iterator(Head->prev);}
+		const_re_iterator rend()const  { return const_re_iterator(Head);}
 
-		const_re_iterator crbegin(){return Head->prev;}
-		const_re_iterator crend(){ return (Head);}
+		const_re_iterator crbegin(){return const_re_iterator(Head->prev);}
+		const_re_iterator crend(){ return const_re_iterator(Head);}
 
 		value_type front(){return *(begin());	}
 		value_type back(){return *(--end());	}
@@ -289,6 +292,7 @@ inline 	void List<T>::assign(initializer_list<value_type> il)
 	for(auto i = il.end(); i != il.begin(); --i)
 		push_back(*i);
 }
+
 	template<typename T>
 inline typename List<T>::iterator List<T>::erase(iterator pos)
 {
@@ -407,7 +411,7 @@ inline 	void List<T>::resize (size_type n, const_value_type& val )
 	}
 	else if(n > 0)
 	{
-		for(int i = 0; i < n-size(); ++i)
+		for(size_type i = 0; i < n-size(); ++i)
 			pop_back();	
 	}
 }
@@ -493,7 +497,6 @@ inline void List<T>::splice (iterator pos, List& x, iterator i)
 {
 	if(!x.empty())
 		transfer(pos, i, i+1);
-
 }
 
 
@@ -522,18 +525,27 @@ inline void List<T>::clear()
 	template<typename T>
 inline	void List<T>::sort( )
 {
-	if(size() == 0 || size() == 1)
+	if( length == 1 || length == 0)//It's to slow to using size(), just using length
 		return;
-	std::list<T> tmp;
-	for(auto i = begin(); i != end(); ++i)
-		tmp.push_back(*i);
-	tmp.sort();
-	clear();
-	for(auto i = tmp.begin(); i != tmp.end(); ++i)
-		push_back(*i);
+	auto left = begin();
+	auto right = end();
+
 }
 
-#endif
+#endif //__JOE_LIST__HPP_
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
