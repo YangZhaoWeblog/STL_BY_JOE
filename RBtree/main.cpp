@@ -5,7 +5,11 @@ using namespace Joe;
 
 int main()
 {
-	rb_tree<int> a;
+	//for rbtree, is not using.
+	//set <key, Compare, Alloc>
+	//rbtree<key, key, key, Compare, Alloc>
+	
+	rb_tree<int, int, int> a;
 }
 
 

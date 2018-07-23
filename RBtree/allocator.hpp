@@ -17,8 +17,7 @@ namespace Joe
 				using const_reference  = const value_type&;
 				using const_pointer    = const value_type*;
 				using const_value_type = const value_type;
-
-			private:
+			public:
 				allocator() = default;
 				inline pointer apply_memory(size_type size)const;
 				inline void recycle_memroy(pointer _ptr)const;
@@ -36,8 +35,7 @@ namespace Joe
 			pointer _adr = nullptr;
 			try
 			{
-				pointer _adr = nullptr;
-				_adr = (_adr)( ::operator new(sizeof(T)*size) );
+				_adr = (pointer)( ::operator new(sizeof(T)*size) );
 			}
 			catch(std::bad_alloc & e )
 			{
