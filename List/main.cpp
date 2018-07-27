@@ -4,8 +4,17 @@ using namespace std;
 
 int main()
 {
+
 	cout << "*************Object a**********************" << endl;
 	List<int> a;
+	a.push_back(0);
+	a.push_back(1);
+	a.push_back(2);
+	a.push_back(3);
+	auto it = a.begin();
+	cout <<  *(it++) << endl;
+	cout << *it << endl;
+
 	cout <<"empty?? :" <<  a.empty() << endl;
 	cout << "size   :" <<  a.size() << endl;
 
@@ -26,9 +35,9 @@ int main()
 	auto i = a.begin();
 	*i = 89;
 
-//	cout << "const test" << endl;
-//	auto j = a.crbegin();
-//	*j = 777;
+	//	cout << "const test" << endl;
+	//	auto j = a.crbegin();
+	//	*j = 777;
 
 	cout << "reverse iterator output" << endl;
 	for(auto i = a.rbegin(); i != a.rend(); ++i )

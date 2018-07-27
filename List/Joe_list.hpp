@@ -15,7 +15,6 @@
 #include <climits>
 using namespace std;
 #define debug(); cout<<__LINE__<<endl;
-using namespace std;
 
 
 
@@ -34,8 +33,8 @@ class iter
 
 		iter operator++(){	ptr = ptr->next; return iter(ptr); };
 		iter operator--(){	ptr = ptr->prev; return iter(ptr); };
-		iter operator++(int){	iter tmp = ptr; ptr = ptr->next; return iter(ptr); }
-		iter operator--(int){   iter tmp = ptr; ptr = ptr->prev; return iter(ptr); }
+		iter operator++(int){	iter tmp = ptr; ptr = ptr->next; return iter(tmp); }
+		iter operator--(int){   iter tmp = ptr; ptr = ptr->prev; return iter(tmp); }
 
 		iter operator+(const difference_type& diff)	{ node_pointer tmp = ptr; difference_type n = diff;while(n--) tmp = tmp->next; return iter(tmp);	}
 		iter operator-(const difference_type& diff)	{ node_pointer tmp = ptr;difference_type n = diff; while(n--) tmp = tmp->prev; return iter(tmp);	}
@@ -527,8 +526,8 @@ inline	void List<T>::sort( )
 {
 	if( length == 1 || length == 0)//It's to slow to using size(), just using length
 		return;
-	auto left = begin();
-	auto right = end();
+//	auto left = begin();
+//	auto right = end();
 
 }
 

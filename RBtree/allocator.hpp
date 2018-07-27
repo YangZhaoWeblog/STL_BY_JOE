@@ -19,7 +19,7 @@ namespace Joe
 				using const_value_type = const value_type;
 			public:
 				allocator() = default;
-				inline pointer apply_memory(size_type size)const;
+				inline pointer apply_memory(size_type size=1)const;
 				inline void recycle_memroy(pointer _ptr)const;
 
 				inline void deconstruct_object(pointer _ptr)const;
@@ -33,7 +33,7 @@ namespace Joe
 		inline typename allocator<T>::pointer Joe::allocator<T>::apply_memory(size_type size)const
 		{
 			pointer _adr = nullptr;
-			try
+		try
 			{
 				_adr = (pointer)( ::operator new(sizeof(T)*size) );
 			}
