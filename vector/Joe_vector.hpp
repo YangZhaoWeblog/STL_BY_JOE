@@ -10,7 +10,7 @@
 #include <climits>
 #define debug(); cout<<"__LINE__"<<666666<<endl;
 using namespace std;
-const int default_kuo = 2;//默认扩展倍数
+const int default_kuo = 2;//默认扩展倍数,应当放到类内作静态成员函数,懒得改了
 
 
 	template<typename it>
