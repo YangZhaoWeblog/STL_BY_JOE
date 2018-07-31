@@ -24,14 +24,14 @@ struct rb_tree_node
 template<typename value_type, typename reference, typename node_pointer> 
 class rb_tree_iterator
 {
-	private:	           
+	protected:	           
 		node_pointer ptr;	
 		void for_plus()
 		{
 			if(ptr->prev->prev == ptr && ptr->color == color_type::RED)//if ptr point to Head /*using end()*/, 
 			{
-					ptr = ptr->left;	
-					return;
+				ptr = ptr->left;	
+				return;
 			}
 			if(ptr->right == static_cast<int>(color_type::RED) )
 			{
@@ -63,8 +63,8 @@ class rb_tree_iterator
 		{
 			if(ptr->prev->prev == ptr && ptr->color == color_type::RED)//if ptr point to Head /*using end()*/, 
 			{
-					ptr = ptr->right;	
-					return;
+				ptr = ptr->right;	
+				return;
 			}
 
 			if(ptr->left == static_cast<int>(color_type::RED) )
@@ -103,8 +103,13 @@ class rb_tree_iterator
 		node_pointer operator->()const{ return &(operator*());	}
 		rb_tree_iterator()=default;
 		~rb_tree_iterator()=default;
-		rb_tree_iterator(node_pointer tmp):ptr(tmp){	}
-		rb_tree_iterator(const rb_tree_iterator& x){ ptr = x.ptr;	}
+
+
+		rb_tree_iterator(node_pointer& tmp):ptr(tmp){	}
+		rb_tree_iterator(const node_pointer& tmp):ptr(tmp){	}
+
+		void operator=(const rb_tree_iterator& x)const{ ptr = x.get_ptr();	}
+
 		rb_tree_iterator operator++()
 		{
 			for_plus();
@@ -135,7 +140,7 @@ class rb_tree_iterator
 template<typename value_type, typename const_reference, typename node_pointer> 
 class const_rb_tree_iterator
 {
-	private:	           
+	protected:	           
 		node_pointer ptr;	
 		void for_plus()
 		{
@@ -214,8 +219,12 @@ class const_rb_tree_iterator
 		node_pointer operator->()const{ return &(operator*());	}
 		const_rb_tree_iterator()=default;
 		~const_rb_tree_iterator()=default;
-		const_rb_tree_iterator(node_pointer tmp):ptr(tmp){	}
-		const_rb_tree_iterator(const_rb_tree_iterator & x){ ptr = x.ptr;	}
+
+		const_rb_tree_iterator(node_pointer& tmp):ptr(tmp){	}
+		const_rb_tree_iterator(const node_pointer& tmp):ptr(tmp){	}
+
+		void operator=(const_rb_tree_iterator& x)const{ ptr = x.get_ptr();	}
+
 		const_rb_tree_iterator operator++()
 		{
 			for_plus();
@@ -247,14 +256,14 @@ class const_rb_tree_iterator
 template<typename value_type, typename reference, typename node_pointer> 
 class reverse_rb_tree_iterator
 {
-	private:	           
+	protected:	           
 		node_pointer ptr;	
 		void for_plus()
 		{
 			if(ptr->prev->prev == ptr && ptr->color == color_type::RED)//if ptr point to Head /*using end()*/, 
 			{
-					ptr = ptr->left;	
-					return;
+				ptr = ptr->left;	
+				return;
 			}
 			if(ptr->right == static_cast<int>(color_type::RED) )
 			{
@@ -286,8 +295,8 @@ class reverse_rb_tree_iterator
 		{
 			if(ptr->prev->prev == ptr && ptr->color == color_type::RED)//if ptr point to Head /*using end()*/, 
 			{
-					ptr = ptr->right;	
-					return;
+				ptr = ptr->right;	
+				return;
 			}
 
 			if(ptr->left == static_cast<int>(color_type::RED) )
@@ -326,8 +335,12 @@ class reverse_rb_tree_iterator
 		node_pointer operator->()const{ return &(operator*());	}
 		reverse_rb_tree_iterator()=default;
 		~reverse_rb_tree_iterator()=default;
-		reverse_rb_tree_iterator(node_pointer tmp):ptr(tmp){	}
-		reverse_rb_tree_iterator(const reverse_rb_tree_iterator& x){ ptr = x.ptr;	}
+
+		reverse_rb_tree_iterator(node_pointer& tmp):ptr(tmp){	}
+		reverse_rb_tree_iterator(const node_pointer& tmp):ptr(tmp){	}
+
+		void operator=(const reverse_rb_tree_iterator& x)const{ ptr = x.get_ptr();	}
+
 		reverse_rb_tree_iterator operator++()
 		{
 			for_minus();
@@ -358,14 +371,14 @@ class reverse_rb_tree_iterator
 template<typename value_type, typename const_reference, typename node_pointer> 
 class const_reverse_rb_tree_iterator
 {
-	private:	           
+	protected:	           
 		node_pointer ptr;	
 		void for_plus()
 		{
 			if(ptr->prev->prev == ptr && ptr->color == color_type::RED)//if ptr point to Head /*using end()*/, 
 			{
-					ptr = ptr->left;	
-					return;
+				ptr = ptr->left;	
+				return;
 			}
 			if(ptr->right == static_cast<int>(color_type::RED) )
 			{
@@ -397,8 +410,8 @@ class const_reverse_rb_tree_iterator
 		{
 			if(ptr->prev->prev == ptr && ptr->color == color_type::RED)//if ptr point to Head /*using end()*/, 
 			{
-					ptr = ptr->right;	
-					return;
+				ptr = ptr->right;	
+				return;
 			}
 
 			if(ptr->left == static_cast<int>(color_type::RED) )
@@ -437,8 +450,13 @@ class const_reverse_rb_tree_iterator
 		node_pointer operator->()const{ return &(operator*());	}
 		const_reverse_rb_tree_iterator()=default;
 		~const_reverse_rb_tree_iterator()=default;
-		const_reverse_rb_tree_iterator(node_pointer tmp):ptr(tmp){	}
-		const_reverse_rb_tree_iterator(const const_reverse_rb_tree_iterator& x){ ptr = x.ptr;	}
+
+		const_reverse_rb_tree_iterator(node_pointer& tmp):ptr(tmp){	}
+		const_reverse_rb_tree_iterator(const node_pointer& tmp):ptr(tmp){	}
+
+		void operator=(const const_reverse_rb_tree_iterator& x)const{ ptr = x.get_ptr();	}
+
+
 		const_reverse_rb_tree_iterator operator++()
 		{
 			for_minus();

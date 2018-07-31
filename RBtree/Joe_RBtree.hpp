@@ -39,10 +39,10 @@ class rb_tree
 		using size_type                 =	 size_t;
 		using key_type					=	 key;   
 		using iterator					=	 rb_tree_iterator<value_type, reference, node_pointer>;
-		using const_iterator			=    const_rb_tree_iterator<value_type, reference, node_pointer>;
+		using const_iterator			=    const_rb_tree_iterator<value_type, const_reference, node_pointer>;
 
 		using reverse_iterator          =	 reverse_rb_tree_iterator<value_type, reference, node_pointer>;
-		using const_reverse_iterator    =	 const_reverse_rb_tree_iterator<value_type, reference, node_pointer>;
+		using const_reverse_iterator    =	 const_reverse_rb_tree_iterator<value_type, const_reference, node_pointer>;
 		using Compared                  =    Compare;
 		using Allocator                 =    Alloc;
 	protected://This is base stuff of rb_tree
@@ -55,7 +55,6 @@ class rb_tree
 		inline node_pointer creat_node(const_value_type& val=value_type());//apply_memory and construct jobject
 		inline node_pointer clone_node();
 		void                destroy_node(node_pointer& tmp);
-		node_pointer&       root(){return Head->prev;}
 		inline void         __rebalance(node_pointer& new_node);
 		inline void         __erase(node_pointer);
 		inline void		    right_rotation(node_pointer);
@@ -63,19 +62,20 @@ class rb_tree
 		inline void         clear();
 
 	public://This is all for iterator.
+		node_pointer&       root(){return Head->prev;}
 		bool empty(){ return node_count == 0; }
 		iterator erase(iterator position);
 		void erase(iterator first, iterator last);
 
 		iterator begin() {return iterator(Head->left); }
 		iterator end()   {return iterator(Head);	}
-		const_iterator cbegin();
-		const_iterator cend();
+		const_iterator cbegin(){return const_iterator(Head->left);	}
+		const_iterator cend()  {return const_iterator(Head);	}
 
 		reverse_iterator rbegin(){return reverse_iterator(Head->right);	}
 		reverse_iterator rend(){return   reverse_iterator(Head);	};
-		const_reverse_iterator crbegin();
-		const_reverse_iterator crend();
+		const_reverse_iterator crbegin(){return const_reverse_iterator(Head->right);}
+		const_reverse_iterator crend(){return const_reverse_iterator(Head);}
 
 	public:
 		bool empty()const{return node_count == 0; }
@@ -95,8 +95,8 @@ class rb_tree
 	}
 		rb_tree(std::initializer_list<value_type> il ):rb_tree()
 	{
-		for(auto i : il)
-			insert_equal(i);	
+		for(auto i = il.begin(); i != il.end(); ++i)
+			insert_equal(*i);	
 	}
 
 		rb_tree(const rb_tree& x)
@@ -155,7 +155,6 @@ rb_tree<key, value, keyofvalue, Compare, Alloc>::insert_equal(const_value_type& 
 		this->Head->color = color_type::RED;
 		ptr->color = color_type::BLACK;
 	}
-
 	else if( key_compare(val, tmp->date) )//new node be left_child
 	{
 		tmp->left   =  ptr; 
@@ -172,12 +171,143 @@ rb_tree<key, value, keyofvalue, Compare, Alloc>::insert_equal(const_value_type& 
 	ptr->prev  =  tmp;
 	++(this->node_count);
 
-	//	if(ptr->prev->color == color_type::RED)
-	__rebalance(ptr );
-
+		__rebalance(ptr );
 	return iterator(ptr);
 }
 
+	template<typename key, typename value, typename keyofvalue, typename Compare, typename  Alloc>
+void rb_tree<key, value, keyofvalue, Compare, Alloc>::__rebalance(node_pointer& new_node)
+{
+
+	node_pointer grandfather = new_node->prev->prev;
+	node_pointer father      = new_node->prev;
+	node_pointer uncle       = static_cast<int>(color_type::RED);
+
+
+	while(new_node != root() &&  father->color == color_type::RED)//From bottom to top, 
+	{
+		if(father == grandfather->left)//for duicheng
+		{
+			uncle = grandfather->right;
+			if( uncle && uncle->color == color_type::RED)
+			{
+				//only this for while
+				if(new_node == father->right)
+				{
+					left_rotation(new_node);
+					right_rotation(new_node);	
+					//just change the color of father
+					father->color = color_type::BLACK;
+
+					if(new_node != root())
+					{
+						father   = new_node->prev;
+						grandfather = father->prev;
+					}
+					else
+						break;
+				}
+				else
+				{
+					right_rotation(father);	
+					//just change the color of new_node
+					new_node->color = color_type::BLACK;
+
+					new_node = new_node->prev;
+
+					if(new_node != root())
+					{
+						father   = new_node->prev;
+						grandfather = father->prev;
+					}
+					else
+						break;
+				}
+				//end of for while
+			}
+			else if(uncle && uncle->color == color_type::BLACK)//uncle is BLACK
+			{
+				if( father->right == new_node)//new_node is right
+				{
+					left_rotation(new_node);//will be  recall father...
+					new_node->color = color_type::BLACK;
+					grandfather->color = color_type::RED;//end of while
+					right_rotation(new_node );
+				}
+				else//new_node is left
+				{
+					right_rotation(father);
+					//need change father and grandfather color
+					father->color = color_type::BLACK;
+					grandfather->color = color_type::RED;
+				}
+			}
+			else
+				break;
+		}
+		else//fuicheng
+		{
+			uncle = grandfather->left;
+			if( uncle && uncle->color == color_type::RED)
+			{
+				//This is for while!!!!
+				if(new_node == father->left)
+				{
+					right_rotation(new_node);
+					left_rotation(new_node);	
+					//just change the color of father
+					father->color = color_type::BLACK;
+
+					if(new_node != root())
+					{
+						father   = new_node->prev;
+						grandfather = father->prev;
+					}
+					else
+						break;
+				}
+				else
+				{
+					left_rotation(father);	
+					//just change the color of new_node
+					new_node->color = color_type::BLACK;
+
+					new_node = new_node->prev;
+
+					if(new_node != root())
+					{
+						father   = new_node->prev;
+						grandfather = father->prev;
+					}
+					else
+						break;
+				}
+				//end of for while!!!!
+			}
+			else if(uncle && uncle->color == color_type::BLACK)//uncle is BLACK
+			{
+				if( father->left == new_node)//new_node is right
+				{
+					right_rotation(new_node);//will be  recall father...
+					new_node->color = color_type::BLACK;
+					grandfather->color = color_type::RED;
+					left_rotation(new_node );
+				}
+				else//new_node is left
+				{
+					left_rotation(father);
+					//need change father and grandfather color
+					father->color = color_type::BLACK;
+					grandfather->color = color_type::RED;
+				}
+			}
+			else
+				break;
+		}
+	}//end of while
+
+	root()->color = color_type::BLACK;
+}
 
 	template<typename key, typename value, typename keyofvalue, typename Compare, typename  Alloc>
 void rb_tree<key, value, keyofvalue, Compare, Alloc>::right_rotation(node_pointer tmp )
@@ -229,88 +359,9 @@ void rb_tree<key, value, keyofvalue, Compare, Alloc>::left_rotation(node_pointer
 
 	up->prev = tmp;//tmp to up
 	tmp->left    = up;
-
-
 }
 
-	template<typename key, typename value, typename keyofvalue, typename Compare, typename  Alloc>
-void rb_tree<key, value, keyofvalue, Compare, Alloc>::__rebalance(node_pointer& new_node)
-{
-	node_pointer grandfather = new_node->prev->prev;
-	node_pointer father      = new_node->prev;
-	node_pointer uncle       = static_cast<int>(color_type::RED);
 
-	while(new_node != root() && father->color == color_type::RED)//From bottom to top, 
-	{
-		if(father == grandfather->left)//for duicheng
-		{
-			uncle = grandfather->right;
-			if( uncle && uncle->color == color_type::RED)
-			{
-				right_rotation(father);	
-				//just change the color of new_node
-				new_node->color = color_type::BLACK;
-				if(grandfather->prev->color == color_type::RED)//only this for while
-				{
-					new_node = father;
-					father   = new_node->prev;
-					grandfather    = father->prev;
-				}
-			}
-			else//uncle is BLACK
-			{
-				if( father->right == new_node)//new_node is right
-				{
-					left_rotation(new_node);//will be  recall father...
-					new_node->color = color_type::BLACK;
-					grandfather->color = color_type::RED;//end of while
-					right_rotation(new_node );
-				}
-				else//new_node is left
-				{
-					right_rotation(father);
-					//need change father and grandfather color
-					father->color = color_type::BLACK;
-					grandfather->color = color_type::RED;
-				}
-			}
-		}
-		else
-		{
-			uncle = grandfather->left;
-			if( uncle && uncle->color == color_type::RED)
-			{
-				left_rotation(father);	
-				//just change the color of new_node
-				new_node->color = color_type::BLACK;
-				if(grandfather->prev->color == color_type::RED)//only this for while
-				{
-					new_node = father;
-					father   = new_node->prev;
-					grandfather    = father->prev;
-				}
-			}
-			else//uncle is BLACK
-			{
-				if( father->left == new_node)//new_node is right
-				{
-					right_rotation(new_node);//will be  recall father...
-					new_node->color = color_type::BLACK;
-					grandfather->color = color_type::RED;//end of while
-					left_rotation(new_node );
-				}
-				else//new_node is left
-				{
-					left_rotation(father);
-					//need change father and grandfather color
-					father->color = color_type::BLACK;
-					grandfather->color = color_type::RED;
-				}
-			}
-		}
-	}//end of while
-	root()->color = color_type::BLACK;
-}
 
 	template<typename key, typename value, typename keyofvalue, typename Compare, typename  Alloc>
 void rb_tree<key, value, keyofvalue, Compare, Alloc>::__erase(node_pointer tmp )

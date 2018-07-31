@@ -23,69 +23,90 @@ int main()
 		};
 
 
-		rb_tree<int, int, int, cmp> a;
-		
-		a.insert_equal(3);
-		a.insert_equal(4);
-		a.insert_equal(2);
-		a.insert_equal(7);
-		a.insert_equal(666);
-		a.insert_equal(-1);
-		a.insert_equal(6);
-		a.insert_equal(9);
+//		rb_tree<int, int, int, cmp> a;
+//		
+//		a.insert_equal(3);
+//		a.insert_equal(4);
+//		a.insert_equal(2);
+//		a.insert_equal(7);
+//		a.insert_equal(666);
+//		a.insert_equal(-1);
+//		a.insert_equal(6);
+//		a.insert_equal(9);
+//
+//
+//		cout << "now, is iterator show time" << endl;
+//
+//		for(auto i = a.begin(); i != a.end(); ++i)
+//			cout << *i << ' ';
+//		cout << endl;
+//
+//		cout << "test pre++" << endl;
+//
+//		auto it = a.begin();
+//		cout << *(it++) << endl;
+//		cout << *it << endl;
+//
+//		cout << "--    test" << endl;
+//		for(auto i = --a.end(); i != --a.begin(); i--)
+//			cout << *i << ' ';
+//		cout << endl;
+//
+//
+//		cout << "This is deadline******************"<< endl;
+//		rb_tree<int, int, int > b = { 3, 2, 7, 4, 2, 789, 2,  2,  0, -77};
+//
+//
+//		for(auto i = b.begin(); i != b.end(); ++i)
+//		{
+//			cout << *i << ' ';
+//		}
+//		cout << endl;
+//
+//		for(auto i = b.rbegin(); i != b.rend(); ++i)
+//			cout << *i << ' ';
+//		cout << endl;
+//
+//		for(auto i = --b.rend(); i != --b.rbegin(); --i)
+//			cout << *i << ' ';
+//		cout << endl;
+//
+//
+//		for(auto i = b.crbegin(); i != b.crend(); ++i)
+//		{
+//			cout << *i << ' ';
+//		}
+//		cout << endl;
 
-		auto left = a.begin();
-		cout << *left <<  endl;;
 
-		auto head = a.end();
-		cout << *head <<  endl;;
+		cout << "multi test*********" << endl;
+		rb_tree<int, int, int > c;
 
-		auto rig = a.end();
-		cout << rig.get_ptr()->right->date <<  endl;
+		c.insert_equal(12);
+		c.insert_equal(1);
+		c.insert_equal(9);
+		c.insert_equal(2);
+		c.insert_equal(0);
+		c.insert_equal(11);
+		c.insert_equal(7);
+		c.insert_equal(19);
+		c.insert_equal(4);
+		c.insert_equal(15);
+		c.insert_equal(18);
+		c.insert_equal(5);
+		c.insert_equal(14);
+		c.insert_equal(13);
+		c.insert_equal(10);
+		c.insert_equal(16);
+		c.insert_equal(6);
+		c.insert_equal(3);
+		c.insert_equal(8);
+		c.insert_equal(17);
 
 
-		cout << "now, is iterator show time" << endl;
-
-		for(auto i = a.begin(); i != a.end(); ++i)
-			cout << *i << ' ';
+		for(auto& i: c)
+			cout << i << ' ';
 		cout << endl;
-
-		cout << "test pre++" << endl;
-
-		auto it = a.begin();
-		cout << *(it++) << endl;
-		cout << *it << endl;
-
-		cout << "--    test" << endl;
-		for(auto i = --a.end(); i != --a.begin(); i--)
-			cout << *i << ' ';
-		cout << endl;
-
-
-		cout << "This is deadline*******************"<< endl;
-		rb_tree<int, int, int > b/* = {3, 2, 7, 4, 2, 6, 9, 0, -77}*/;
-
-		b.insert_equal(3);
-		b.insert_equal(4);
-		b.insert_equal(2);
-		b.insert_equal(7);
-		b.insert_equal(666);
-		b.insert_equal(-1);
-
-
-		for(auto i = b.rbegin(); i != b.rend(); ++i)
-			cout << *i << ' ';
-		cout << endl;
-
-		for(auto i = --b.rend(); i != --b.rbegin(); --i)
-			cout << *i << ' ';
-		cout << endl;
-
-		cout << *(--b.rend()) << endl;
-		auto j = --b.rend();
-		cout << *(--j) << endl;
-		cout << *(----j) << endl;
-		cout << *(------j) << endl;
 	}
 }
 
