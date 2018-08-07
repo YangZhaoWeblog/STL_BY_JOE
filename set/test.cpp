@@ -5,16 +5,17 @@ using namespace std;
 
 int main()
 {
-	set<int> a;
-    a.insert(3);
-    a.insert(2);
-    a.insert(7);
-    a.insert(4);
-    a.insert(2);
-    a.insert(6);
+    set<int> a = {10, 20, 30, 40, 50, 60	};
 
-	for(auto i = a.rbegin(); i != a.rend(); ++i)
-		cout << *i << endl;
+    auto it = ++(++(++(++a.begin())));
 
+    a.insert(it,35);
+    for(auto i = a.begin(); i != a.end(); ++i)
+        cout << *i << ' ';
+    cout << endl;
+
+    a.insert(it,35);
+    for(auto i = a.begin(); i != a.end(); ++i)
+        cout << *i << ' ';
 }
 
