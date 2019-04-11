@@ -17,8 +17,6 @@ using namespace std;
 #define debug(); cout<<__LINE__<<endl;
 
 
-
-
 template<typename node_pointer, typename reference,typename difference_type>
 class iter
 {

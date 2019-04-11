@@ -125,6 +125,7 @@ public:
 
     void operator=(const rb_tree_iterator& x)const
     {
+		if(x != *this)
         ptr = x.get_ptr();
     }
 
@@ -258,7 +259,8 @@ public:
 
     void operator=(const_rb_tree_iterator& x)const
     {
-        ptr = x.get_ptr();
+        if(x != *this)
+            ptr = x.get_ptr();
     }
 
     const_rb_tree_iterator operator++()
@@ -392,6 +394,7 @@ public:
 
     void operator=(const reverse_rb_tree_iterator& x)const
     {
+        if(x != *this)
         ptr = x.get_ptr();
     }
 
@@ -525,6 +528,7 @@ public:
 
     void operator=(const const_reverse_rb_tree_iterator& x)const
     {
+        if(x != *this)
         ptr = x.get_ptr();
     }
 

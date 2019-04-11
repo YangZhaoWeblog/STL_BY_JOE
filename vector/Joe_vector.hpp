@@ -137,7 +137,7 @@ public:
     {
         finish = start= (iterator)(::operator new(sizeof(T)*n));
         end_of_storage = start + sizeof(T)*n;
-        for(int i = 0; i < n; ++i)
+        for(unsigned i = 0; i < n; ++i)
             push_back(value);
     }
     Joe_vector(Joe_vector & x);
