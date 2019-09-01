@@ -1,0 +1,4 @@
+The vector had some shortcoming
+1. default time should be static member variable
+2. const_reverse iterator had not finished.
+3. have no allocator, just some function.
