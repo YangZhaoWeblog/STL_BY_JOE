@@ -43,7 +43,7 @@ node_pointer create_rb_tree_node(void* val, size_type data_size)
     if(data_size && val)
     {
         new_node->data = malloc(data_size);//分配内存，相当于 operator_new
-        memmove(new_node->data, val, data_size);//复制数据,相当于 placement_new
+        memcpy(new_node->data, val, data_size);//复制数据,相当于 placement_new
     }
 
     new_node->left = 0;
@@ -67,8 +67,8 @@ typedef struct iterator Iterator;
 //形式1：typedef  返回类型(*新类型)(参数表)
 //eg: IteratorNext 为这个函数指针的别名
 //定义这种类型为 指向某种函数的指针
-typedef void (*IteratorNext)(Iterator *thiz);
-typedef void (*IteratorPrev)(Iterator *thiz);
+typedef Iterator (*IteratorNext)(Iterator *thiz);
+typedef Iterator (*IteratorPrev)(Iterator *thiz);
 typedef void (*IteratorAdvance)(Iterator *thiz, size_t off_set);
 typedef void (*IteratorReduce)(Iterator *thiz, size_t off_set);
 
@@ -85,8 +85,8 @@ void init_Iterator(Iterator* thiz);
 static inline void* iterator_get_ptr(Iterator *thiz);
 static inline void  iterator_set(Iterator *thiz, void* data, size_type data_size);
 
-static inline void iterator_next(Iterator *thiz);
-static inline void iterator_prev(Iterator *thiz);
+static inline Iterator iterator_next(Iterator *thiz);
+static inline Iterator iterator_prev(Iterator *thiz);
 static inline void iterator_advance(Iterator *thiz, size_t off_set);
 static inline void iterator_reduce(Iterator *thiz, size_t off_set);
 static inline _Bool iterator_compare_equall(Iterator *x, Iterator y);
@@ -130,15 +130,20 @@ void init_Iterator(Iterator* thiz)
 //extern和static是C语言中的两个修饰符，extern可用于修饰函数或者变量，表示该变量或者函数在其他文件中进行了定义；static也可用于修饰函数或者变量，表示该函数或者变量只能在该文件中使用。可利用它们对数据或者函数进行隐藏或者限制访问权限。
 //static 修饰的内联函数，一般情况下不会产生函数本身的代码，而是全部被嵌入在被调用的地方。如果不加static，则表示该函数有可能会被其他编译单元所调用，所以一定会产生函数本身的代码。
 
-static inline void iterator_next(Iterator *thiz)//特化
+static inline Iterator iterator_next(Iterator *thiz)//特化
 {
     node_pointer thiz_ptr = (node_pointer)thiz->ptr;
+    Iterator tmp;
+    init_Iterator(&tmp);
+
+
 
     if(thiz_ptr->prev->prev == thiz_ptr
             && thiz_ptr->color == RED)//if thiz_ptr point to Head /*using end()*/,
     {
         thiz->ptr = thiz_ptr->left;
-        return;
+        tmp.ptr = thiz->ptr;
+        return tmp;
     }
     if(thiz_ptr->right == RED )
     {
@@ -166,16 +171,22 @@ static inline void iterator_next(Iterator *thiz)//特化
         }
         thiz->ptr = thiz_ptr;
     }
-    return;
+
+    tmp.ptr = thiz->ptr;
+    return tmp;
 }
 
-static inline void iterator_prev(Iterator *thiz)//特化
+static inline Iterator iterator_prev(Iterator *thiz)//特化
 {
     node_pointer thiz_ptr = (node_pointer)thiz->ptr;
+    Iterator tmp;
+    init_Iterator(&tmp);
+
     if(thiz_ptr->prev->prev == thiz_ptr && thiz_ptr->color == RED)//if thiz_ptr point to Head /*using end()*/,
     {
         thiz->ptr = thiz_ptr->right;
-        return;
+        tmp.ptr = thiz->ptr;
+        return tmp;
     }
 
     if(thiz_ptr->left == RED)
@@ -205,7 +216,8 @@ static inline void iterator_prev(Iterator *thiz)//特化
         thiz->ptr = thiz_ptr->right;
     }
 
-    return;
+    tmp.ptr = thiz->ptr;
+    return tmp;
 }
 
 static inline void iterator_advance(Iterator *thiz, size_t off_set)//针对红黑树特化

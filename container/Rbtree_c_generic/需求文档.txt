@@ -1,19 +1,21 @@
 # 项目需求
 ## 设计红黑树，可对任意类型元素进行: 
 1. insert();
-2. delete();
 3. 迭代器访问
 4. 自定义比较函数 
 
 # 所有二叉树的优点:
 012345678
+
 xxxxxxxxx  o(n)
-    x
-   x x
- x x x x
+     x
+    x x
+  x x x x
+ x
 x
+
 大大减少了查找苏需要的时间复杂度 o(log2n)
-#　红黑树的优点: 要求 最高高度差 <= 最低高度差*2
+#　红黑树的要求: 要求 最高高度 <= 最低高度*2
            x
           x x
         x x x x
@@ -21,20 +23,18 @@ x
     x
   x
 x
-
+   
 # 项目设计
-  1. 用枚举类型 来标识 红色与黑色
+1. 用枚举类型 来标识 红色与黑色
 2. 不需要 亚元节点(dump node)
+    :什么作用都不起，只是为了完成某种操作
 
 ## 节点结构如下:
-
-
-
   ```c++
   // 类型解析
-  enum color_type {RED = 0, BLACK = 1};
+enum color_type {RED = 0, BLACK = 1};
 struct rb_tree_node;//声明 rb_tree_node 类型
-typedef  int value_type;    //声明 数据类型(泛型的特化) 为 int
+typedef  double value_type;    //声明 数据类型(泛型的特化) 为 int
 typedef struct rb_tree_node* node_pointer;//
 
 typedef struct rb_tree_node
@@ -50,10 +50,12 @@ typedef struct rb_tree_node
 }rb_tree_node;
 
 void init_rb_tree_node(rb_tree_node* body, value_type val){
-  body->left = (void*)RED;
-  body->right = (void*)RED;
-  body->prev = (void*)RED;
+  body->left = (void*)0;
+  body->right = (void*)0;
+  body->prev = (void*)0;
+
   body->date = val;
+
   body->color = RED;
 }
 
@@ -65,16 +67,30 @@ void init_rb_tree_node(rb_tree_node* body, value_type val){
 ## 了解c语言中的 enum
 
 # 项目讲解
+
 ## 语法讲解
 1. 什么是 迭代器??
 迭代器，是将 数据结构 与 算法分离的一个重要手段. eg: 二叉树树与链表的结构不同，我们现在要实现 遍历访问元素算法，那么对于二叉树与链表，我们必须写出不同的具体遍历细节. 而如果有个迭代器，我们就可以方便的只关心元素的范围，而不去关心具体的操作.
-eg: ->next
-->left || ->right
+for(iterator i = x.begin; i != x.end; ++i){
+    printf("%d\n", i);
+}
+不管这个 x 是二叉树还是链表还是其他的数据结构，只要用迭代器，进行 ++ 操作，就可以遍历完，不用担心数据结构中　节点到达另一个节点的方式是　p = p->next 还是 p = p->prev, 封装细节，只在乎逻辑上的操作，这就是迭代器.
 
 2. c 语言中的 void*
-void* 可以类比为面向对面中的基类. c 语言中，各种类型的指针可以互相转换，指针就是 存储地址的变量. 我们的声明仅仅代表着编译器以何种类型的指针去识别它, eg: void* 代表无类型, int* 代表 将地址以 int* 型看待。 所以我们一定可以让编译器按照 void* 类型去处理，我们需要的时候再转换。
+    有 int* ,double* , float*
+void* 可以类比为面向对面中的基类. 
 
-3. 为什么使用 void* 来处理俩报表?
+c 语言中，各种类型的指针可以互相转换，指针就是 存储地址的变量. 我们的声明仅仅代表着编译器以何种类型的指针去识别它, eg: void* 代表无类型, int* 代表 将地址以 int* 型看待。 所以我们一定可以让编译器按照 void* 类型去处理，我们需要的时候再转换。
+ 唯一不同的是 ++, -- ;
+ int*   i    i    i
+ int    xxxx xxxx xxxx xxxx xxxx
+
+ double* 1        1        1
+ double  xxxxxxxx xxxxxxxx xxxxxxxx
+
+ void* 不允许算数操作, ++ -- p+= p-=
+
+3. 为什么使用 void* 来指向存储数据呢?
 > 在实际使用中, 我们可能会这样写
 ```c++
 typedef value_type <我们想要的数据类型>;
@@ -96,16 +112,43 @@ int main()
 }
 如此以来，自然而然的数据结构中存储的就是我们定义的类型的数据了.现在有新要求了，我们要新建一个链表存储 double 类型的变量, 如何使得 int、double 类型数据同时存在? ? ?
 解决方案: 
-节点的数据域不是存储数据类型的　变量, 而是 存储 void* 指针 变量, void* 指针所指向的变量为 相应数据，需要取出数据时，将 void* 特化成　相应指针类型的变量 再解引用.
-当然这么做也是有代价的，即我们必须要知道　所定义类型的　长度.
+节点的数据域不是存储数据类型的　变量, 而是 存储 void* 指针 变量, void* 指针所指向的内存为 存储着相应的数据，需要取出数据时，将 void* 特化成　相应指针类型(int* double*)的变量 再解引用.
+ 当然这么做也是有代价的，即我们必须要知道　所定义类型的　长度.
 
 eg:
-void insert(void* data, size_type data_size)
+_Bool insert(RBtree* thiz, void *data,
+             void (*assign)(void*, const void*))
+)
 {
+    //为什么 要用datasize???
+    //答： 如果不用，我们就无法知道 void* 指向的数据为何种类型，那么就无法知道 拷贝l多少内存能刚好吧这个类型的数据拷贝完.
   node_pointer new_node = malloc(dada_size);
+
+//memecpy(新地址，旧地址，长度);
   memcpy(new_node, data, data_size);
+  //memecpy是个没有感情的搬运工
+  //编译器是个没有智商的傻子
+
+  为什么要有第三个参数呢???
+  因为, 比如这是一段内存
+
+ 旧数据    ..data....
+ 新的   ....x......x...x......x...
+ 旧的   ....x......x...x......x...
+ 现在新指针旧指针都指向了 这片存储data的内存.那么我 free(旧的), 数据就不存在了，内存也将被收回, 现在我继续使用复制过得新的 内存，将出现空指针错误.
+ 所以默认的拷贝函数不能解决这种情况.
+ 所以我们传入一个函数指针, 用来进行 *优化拷贝*
+
+ 旧数据    ..data....
+ 旧的   ....x......x...x......x...
+ 新数据    ..data....
+ 新的   ....x......x...x......x...
+    因为我们不知道要进行拷贝的类型一共有多少种这种指针，所以这个拷贝函数我们交给定义这种类型的用户自己来定义.
+    未经优化的 旧拷贝 被称为浅拷贝,
+    优化后的为 深拷贝.
 }
 ```
+
 
 ## 算法讲解
 首先我们需要知道红黑树的规则:
@@ -167,6 +210,7 @@ void insert(void* data, size_type data_size)
   //最新版本: 妇幼, 叔(树)红黑, 己右左, 左旋->右左旋.
 
   //                2x2x2 == 8
+  //平衡操作所有口诀:
   父左叔红己左 只右旋.
   父左叔红己右 左右旋.
   父左叔黑己左 只右旋.
